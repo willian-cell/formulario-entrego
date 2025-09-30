@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Entregô</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+        --primary-blue: #0066cc;
+        --primary-dark: #0052a3;
+        --primary-light: #4d94ff;
+      --secondary-blue: #00a8ff;
+      --light-blue: #e8f1ff;
+      --accent-blue: #4a90e2;
+      --dark-blue: #0d2b50;
+      --white: #ffffff;
+      --light-gray: #f5f7fa;
+      --medium-gray: #e1e5eb;
+      --dark-gray: #6c757d;
+      --text-dark: #343a40;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+      --border-radius: 10px;
+    }
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-gray);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    .banner-header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+      color: var(--white);
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 150px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: skewX(-15deg);
+    }
+
+    .banner-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+    }
+
+    .banner-header h1 i {
+      margin-right: 12px;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Cards de Análises */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid var(--primary-blue);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 80px;
+      background: var(--light-blue);
+      border-radius: 0 0 0 80px;
+    }
+
+    .stat-card h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+      color: var(--dark-gray);
+      font-weight: 500;
+    }
+
+    /* Seções de Análise */
+    .chart-section {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .chart-section h2 {
+      color: var(--primary-blue);
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--medium-gray);
+      display: flex;
+      align-items: center;
+    }
+
+    .chart-section h2 i {
+      margin-right: 10px;
+      color: var(--accent-blue);
+    }
+
+    .chart-section ul {
+      list-style-type: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .chart-section ul li {
+      padding: 0.8rem 1rem;
+      background: var(--light-blue);
+      border-radius: 6px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .chart-section ul li span {
+      background: var(--primary-blue);
+      color: white;
+      padding: 0.2rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+    }
+/* Tabela - VERSÃO OTIMIZADA */
+    .table-container {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    .table-container h2 {
+      color: var(--primary-blue);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .table-container h2 i {
+      margin-right: 8px;
+      color: var(--accent-blue);
+    }
+
+    .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1200px;
+      font-size: 0.82rem;
+    }
+
+    /* Tabela - VERSÃO COM LINHAS EXCEL */
+.table-container {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 1.2rem;
+  box-shadow: var(--shadow);
+  overflow-x: auto;
+}
+
+.table-container h2 {
+  color: var(--primary-blue);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.table-container h2 i {
+  margin-right: 8px;
+  color: var(--accent-blue);
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+  font-size: 0.82rem;
+  border: 1px solid #d0d7e5; /* Borda externa da tabela */
+}
+
+.dashboard-table thead {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+.dashboard-table th {
+  padding: 0.7rem 0.5rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  border: 1px solid #c0c8d8; /* Linhas entre cabeçalhos */
+}
+
+.dashboard-table td {
+  padding: 0.6rem 0.5rem;
+  border: 1px solid #e1e5eb; /* Linhas entre células - estilo Excel */
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.dashboard-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: var(--light-blue);
+}
+
+.dashboard-table tbody tr:nth-child(even) {
+  background-color: #fafbfc; /* Zebrado estilo Excel */
+}
+
+.dashboard-table tbody tr:nth-child(even):hover {
+  background-color: var(--light-blue);
+}
+
+    .dashboard-table thead {
+      background: var(--primary-blue);
+      color: var(--white);
+    }
+
+    .dashboard-table th {
+      padding: 0.7rem 0.5rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .dashboard-table td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid var(--medium-gray);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .dashboard-table tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    .dashboard-table tbody tr:hover {
+      background-color: var(--light-blue);
+    }
+
+    .dashboard-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Melhorias para colunas específicas */
+    .col-nome {
+      min-width: 180px;
+      max-width: 200px;
+    }
+
+    .col-telefone, .col-cpf {
+      min-width: 110px;
+    }
+
+    .col-email {
+      min-width: 180px;
+      max-width: 200px;
+    }
+
+    .col-chave-pix, .col-tipo-chave {
+      min-width: 120px;
+    }
+
+    .col-validacao, .col-nacionalidade, .col-estado-civil {
+      min-width: 100px;
+    }
+
+    /* Estilos para conteúdo específico */
+    .email-cell {
+      word-break: break-all;
+    }
+
+    .chave-pix-cell {
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-pj {
+      background: #e1f5fe;
+      color: #0288d1;
+    }
+
+    .badge-pf {
+      background: #e8f5e9;
+      color: #388e3c;
+    }
+
+    .badge-brasileiro {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .badge-casado {
+      background: #fce4ec;
+      color: #c2185b;
+    }
+
+    .foto-thumb {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--medium-gray);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .chart-section ul {
+        grid-template-columns: 1fr;
+      }
+      
+      .banner-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .table-container {
+        padding: 0.8rem;
+      }
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      
+      .chart-section ul {
+        grid-template-columns: 1fr;
+      }
+      
+      .banner-header h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    /* Badges para modal */
+    .modal-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .modal-moto {
+      background: #e1f5fe;
+      color: #0288d1;
+    }
+
+    .modal-bicicleta {
+      background: #e8f5e9;
+      color: #388e3c;
+    }
+  </style>
+</head>
+<body>
+  <header class="banner-header">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard - Entregô Tag Norte</h1>
+  </header>
+
+  <main class="container">
+    <!-- Cards de Análises -->
+    <div class="stats">
+      <div class="stat-card">
+        <h2>{{ total_entregadores }}</h2>
+        <p>Entregadores cadastrados</p>
+      </div>
+      <div class="stat-card">
+        <h2>{{ total_cidades }}</h2>
+        <p>Cidades distintas</p>
+      </div>
+      <div class="stat-card">
+        <h2>{{ total_modal_moto }}</h2>
+        <p>Entregadores de Moto</p>
+      </div>
+      <div class="stat-card">
+        <h2>{{ total_modal_bicicleta }}</h2>
+        <p>Entregadores de Bicicleta</p>
+      </div>
+    </div>
+
+    <!-- Análises em Grid -->
+    <div class="analytics-grid">
+      <!-- Análises por Nacionalidade -->
+      <div class="chart-section">
+        <h2><i class="fas fa-globe-americas"></i> Análise de Nacionalidade</h2>
+        <ul>
+          {% for nacionalidade, count in nacionalidades_count.items() %}
+            <li>{{ nacionalidade }} <span>{{ count }} entregador(es)</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Análises de Tipos de Chave PIX -->
+        <div class="chart-section">
+        <h2><i class="fas fa-key"></i> Tipos de Chave PIX</h2>
+        <ul>
+            {% for tipo_chave, count in tipos_chave_pix_count.items() %}
+            <li>{{ tipo_chave }} <span>{{ count }} entregador(es)</span></li>
+            {% endfor %}
+        </ul>
+        </div>
+
+      <!-- Análises por Cidade -->
+        <div class="chart-section">
+        <h2><i class="fas fa-city"></i> Análise por Cidade</h2>
+        <ul>
+            {% for cidade, count in cidades_count.items() %}
+            <li>{{ cidade }} <span>{{ count }} entregador(es)</span></li>
+            {% endfor %}
+        </ul>
+        </div>
+
+      <!-- Análises por Modal -->
+        <div class="chart-section">
+        <h2><i class="fas fa-motorcycle"></i> Análise de Modal</h2>
+        <ul>
+            {% for modal, count in modais_count.items() %}
+            <li>{{ modal }} <span>{{ count }} entregador(es)</span></li>
+            {% endfor %}
+        </ul>
+        </div>
+
+
+    </div>
+
+    <!-- Análises por Estado Civil -->
+    <div class="chart-section">
+      <h2><i class="fas fa-heart"></i> Análise de Estado Civil</h2>
+      <ul>
+        {% for estado_civil, count in estado_civil_count.items() %}
+          <li>{{ estado_civil }} <span>{{ count }} entregador(es)</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Tabela de Entregadores -->
+    <div class="table-container">
+    <h2><i class="fas fa-list"></i> Lista de Entregadores</h2>
+    <table class="dashboard-table">
+        <thead>
+        <tr>
+            <th>Nome Completo</th>
+            <th>Telefone WhatsApp</th>
+            <th>Email</th>
+            <th>Tipo de Chave PIX</th>
+            <th>Chave Pix</th>
+            <th>Validação de Chave PIX</th>
+            <th>Nacionalidade</th>
+            <th>Estado Civil</th>
+            <th>CPF</th>
+            <th>RG</th>
+            <th>Data de Nascimento</th>
+            <th>CNPJ</th>
+            <th>Cidade</th>
+            <th>Modal</th>
+            <th>Foto</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for e in entregadores %}
+        <tr>
+            <td>{{ e.nome }}</td>
+            <td>{{ e.telefone }}</td>
+            <td>{{ e.email }}</td>
+            <td>{{ e.tipo_chave_pix }}</td>
+            <td>{{ e.chave_pix }}</td>
+            <td>{{ e.validacao_chave_pix }}</td>
+            <td>{{ e.nacionalidade }}</td>
+            <td>{{ e.estado_civil }}</td>
+            <td>{{ e.cpf }}</td>
+            <td>{{ e.rg }}</td>
+            <td>{{ e.data_nascimento }}</td>
+            <td>{{ e.cnpj if e.cnpj else "Não informado" }}</td>
+            <td>{{ e.cidade }}</td>
+            <td>
+            {% if e.modal == 'Moto' %}
+                <span class="modal-badge modal-moto">{{ e.modal }}</span>
+            {% else %}
+                <span class="modal-badge modal-bicicleta">{{ e.modal }}</span>
+            {% endif %}
+            </td>
+            <td>
+            {% if e.foto_rosto %}
+                <img src="{{ url_for('uploaded_file', filename=e.foto_rosto) }}" alt="Foto" class="foto-thumb">
+            {% else %}
+                <span style="color: var(--dark-gray);">Sem foto</span>
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+  </main>
+
+  <script>
+    // Adiciona animação de contagem nos cards de estatísticas
+    document.addEventListener('DOMContentLoaded', function() {
+      const statCards = document.querySelectorAll('.stat-card h2');
+      
+      statCards.forEach(card => {
+        const target = parseInt(card.textContent);
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          card.textContent = Math.floor(current);
+        }, 30);
+      });
+    });
+  </script>
+</body>
+</html>

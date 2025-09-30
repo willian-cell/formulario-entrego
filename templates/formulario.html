@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro Entregô Tag Norte</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="banner-header">
+      <div class="banner-overlay">
+        <!-- CORREÇÃO AQUI: Usando url_for para a imagem -->
+        <img src="{{ url_for('static', filename='img/entrego-logo.png') }}"  alt="Logo Entregô Taguatinga Norte" class="banner-logo">
+        <h1 class="banner-title">Entregô Tag Norte</h1>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="form-header">
+        <h2>Formulário de Cadastro</h2>
+        <p>Preencha os campos abaixo para se cadastrar em nossa plataforma</p>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="alert">
+            {% for category, message in messages %}
+              <p class="alert-message">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" enctype="multipart/form-data" class="modern-form">
+        <div class="form-section">
+          <h3 class="section-title">Dados Pessoais</h3>
+          <div class="input-group">
+            <input type="text" name="nome" placeholder="Nome completo *" required class="form-input">
+            <input type="text" name="telefone" placeholder="Telefone WhatsApp *" required class="form-input">
+          </div>
+          <input type="email" name="email" placeholder="Email *" required class="form-input">
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">Dados Financeiros</h3>
+          <div class="input-group">
+            <select name="tipo_chave_pix" required class="form-select">
+              <option value="">Tipo de chave PIX *</option>
+              <option value="CPF">CPF</option>
+              <option value="CNPJ">CNPJ</option>
+              <option value="Email">Email</option>
+              <option value="Telefone">Telefone</option>
+              <option value="Aleatória">Aleatória</option>
+            </select>
+            
+            <input type="text" name="chave_pix" placeholder="Chave Pix *" required class="form-input">
+          </div>
+          
+          <select name="validacao_chave_pix" required class="form-select">
+            <option value="">Validação de chave PIX *</option>
+            <option value="Física">Conta Física</option>
+            <option value="PJ">Conta PJ (CNPJ/MEI)</option>
+          </select>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">Documentação</h3>
+          <div class="input-group">
+            <select name="nacionalidade" required class="form-select">
+              <option value="">Selecione a nacionalidade *</option>
+              {% for n in nacionalidades %}
+                <option value="{{ n }}">{{ n }}</option>
+              {% endfor %}
+            </select>
+
+            <select name="estado_civil" required class="form-select">
+              <option value="">Estado civil *</option>
+              <option>Solteiro(a)</option>
+              <option>Casado(a)</option>
+              <option>Divorciado(a)</option>
+              <option>Viúvo(a)</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <input type="text" name="cpf" placeholder="CPF *" required class="form-input">
+            <input type="text" name="rg" placeholder="RG *" required class="form-input">
+          </div>
+
+          <div class="input-group">
+            <input type="date" name="data_nascimento" required class="form-input">
+            <input type="text" name="cnpj" placeholder="CNPJ (opcional)" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">Dados de Atuação</h3>
+          <div class="input-group">
+            <input type="text" name="cidade" placeholder="Cidade *" required class="form-input">
+            <select name="modal" required class="form-select">
+              <option value="">Modal *</option>
+              <option>Moto</option>
+              <option>Bicicleta</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">Documento de Identificação</h3>
+          <div class="file-upload-container">
+            <label class="file-upload-label">
+              <span>Foto de rosto *</span>
+              <input type="file" name="foto" accept="image/*" required class="file-input">
+              <div class="file-upload-area">
+                <span class="file-upload-text">Clique para selecionar ou arraste uma foto</span>
+                <span class="file-upload-hint">Formatos: JPG, PNG (Máx. 5MB)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span class="btn-text">Enviar Cadastro</span>
+            <span class="btn-icon">→</span>
+          </button>
+          <button type="reset" class="btn btn-secondary">Limpar Formulário</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

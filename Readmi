@@ -1,0 +1,27 @@
+1.1 - Criar requirements.txt
+
+No seu ambiente de desenvolvimento, execute o seguinte comando para gerar o arquivo requirements.txt, que lista todas as dependências do seu projeto:
+
+pip freeze > requirements.txt
+
+
+
+
+dentro do servidor python o meu nome de usuario é: Willian96w38528736
+
+site: /home/Willian96w38528736/mysite/flask_app.py
+
+Código:
+O que seu site está executando.
+
+Código-fonte:
+/home/Willian96w38528736/mysite
+
+Ir para o diretório
+Diretório de trabalho:
+/home/Willian96w38528736/
+
+Ir para o diretório
+Arquivo de configuração WSGI:/var/www/willian96w38528736_pythonanywhere_com_wsgi.py
+Versão do Python:
+3.13
