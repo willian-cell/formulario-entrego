@@ -1,599 +1,381 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - Entregô</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    :root {
-        --primary-blue: #0066cc;
-        --primary-dark: #0052a3;
-        --primary-light: #4d94ff;
-      --secondary-blue: #00a8ff;
-      --light-blue: #e8f1ff;
-      --accent-blue: #4a90e2;
-      --dark-blue: #0d2b50;
-      --white: #ffffff;
-      --light-gray: #f5f7fa;
-      --medium-gray: #e1e5eb;
-      --dark-gray: #6c757d;
-      --text-dark: #343a40;
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-      --border-radius: 10px;
+    :root{
+      --primary:#0066cc;
+      --primary-600:#0052a3;
+      --primary-300:#4d94ff;
+      --accent:#4a90e2;
+      --secondary:#00a8ff;
+      --text:#343a40;
+      --muted:#6c757d;
+      --bg:#f5f7fa;
+      --card:#ffffff;
+      --line:#e1e5eb;
+      --line-2:#d0d7e5;
+      --light:#e8f1ff;
+      --shadow:0 4px 12px rgba(0,0,0,.08);
+      --shadow-lg:0 8px 20px rgba(0,0,0,.12);
+      --radius:12px;
     }
 
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:Segoe UI,system-ui,-apple-system,Roboto,Arial,Verdana,sans-serif;line-height:1.6}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Header */
+    .banner{
+      background:linear-gradient(135deg,var(--primary),var(--secondary));
+      color:#fff;padding:18px 24px;position:relative;overflow:hidden;box-shadow:var(--shadow)
     }
-
-    body {
-      background-color: var(--light-gray);
-      color: var(--text-dark);
-      line-height: 1.6;
+    .banner::before{
+      content:"";position:absolute;inset:0 0 0 auto;width:180px;background:rgba(255,255,255,.12);
+      transform:skewX(-15deg)
     }
+    .banner h1{display:flex;gap:12px;align-items:center;font-weight:700;font-size:1.6rem}
+    .banner h1 i{font-size:1.3rem}
 
-    .banner-header {
-      background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-      color: var(--white);
-      padding: 1.5rem 2rem;
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* Toolbar */
+    .toolbar{
+      display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px
     }
-
-    .banner-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      transform: skewX(-15deg);
+    .toolbar .control{
+      background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow)
     }
-
-    .banner-header h1 {
-      font-size: 1.8rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
+    .toolbar input[type="search"]{
+      border:0;outline:0;min-width:220px
     }
-
-    .banner-header h1 i {
-      margin-right: 12px;
-      font-size: 1.5rem;
+    .toolbar select{border:0;outline:0;background:transparent}
+    .btn{
+      border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;cursor:pointer;
+      display:inline-flex;gap:8px;align-items:center;font-weight:600;box-shadow:var(--shadow);transition:.2s
     }
+    .btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+    .btn.primary{background:var(--primary);color:#fff;border-color:transparent}
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem;
+    /* Stats */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:20px 0 28px}
+    .card{
+      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;position:relative;overflow:hidden;border-left:4px solid var(--primary)
     }
+    .card::before{content:"";position:absolute;top:0;right:0;width:80px;height:80px;background:var(--light);border-bottom-left-radius:80px}
+    .stat-value{font-size:2rem;font-weight:800;color:var(--primary);margin-bottom:4px}
+    .stat-label{color:var(--muted);font-weight:600}
 
-    /* Cards de Análises */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
+    /* Sections (listas) */
+    .section{
+      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:18px
     }
-
-    .stat-card {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      border-left: 4px solid var(--primary-blue);
+    .section h2{
+      font-size:1.1rem;color:var(--primary);display:flex;align-items:center;gap:10px;
+      margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:10px
     }
+    .kv-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+    .kv-item{background:var(--light);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+    .kv-item span{background:var(--primary);color:#fff;border-radius:999px;padding:2px 10px;font-size:.8rem}
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-hover);
+    /* Table */
+    .table-wrap{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;overflow:auto}
+    .table-wrap h2{display:flex;align-items:center;gap:8px;color:var(--primary);margin-bottom:10px}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:1100px;border:1px solid var(--line-2)}
+    thead th{
+      position:sticky;top:0;background:var(--primary);color:#fff;font-size:.78rem;text-transform:uppercase;letter-spacing:.3px;
+      padding:10px;border-right:1px solid rgba(255,255,255,.25);cursor:pointer;user-select:none
     }
+    thead th:last-child{border-right:0}
+    tbody td{padding:9px 10px;border-right:1px solid var(--line);border-top:1px solid var(--line);font-size:.86rem}
+    tbody tr:nth-child(even){background:#fafbfc}
+    tbody tr:hover{background:var(--light)}
+    td.email{word-break:break-word}
+    td.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8rem}
+    .thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--line)}
+    .badge{display:inline-block;padding:.18rem .5rem;border-radius:999px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+    .badge.moto{background:#e1f5fe;color:#0288d1}
+    .badge.bike{background:#e8f5e9;color:#2e7d32}
 
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 80px;
-      height: 80px;
-      background: var(--light-blue);
-      border-radius: 0 0 0 80px;
-    }
-
-    .stat-card h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: var(--primary-blue);
-      margin-bottom: 0.5rem;
-    }
-
-    .stat-card p {
-      color: var(--dark-gray);
-      font-weight: 500;
-    }
-
-    /* Seções de Análise */
-    .chart-section {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow);
-    }
-
-    .chart-section h2 {
-      color: var(--primary-blue);
-      font-size: 1.4rem;
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.8rem;
-      border-bottom: 1px solid var(--medium-gray);
-      display: flex;
-      align-items: center;
-    }
-
-    .chart-section h2 i {
-      margin-right: 10px;
-      color: var(--accent-blue);
-    }
-
-    .chart-section ul {
-      list-style-type: none;
-      padding: 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 0.8rem;
-    }
-
-    .chart-section ul li {
-      padding: 0.8rem 1rem;
-      background: var(--light-blue);
-      border-radius: 6px;
-      font-weight: 500;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .chart-section ul li span {
-      background: var(--primary-blue);
-      color: white;
-      padding: 0.2rem 0.6rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-    }
-/* Tabela - VERSÃO OTIMIZADA */
-    .table-container {
-      background: var(--white);
-      border-radius: var(--border-radius);
-      padding: 1.2rem;
-      box-shadow: var(--shadow);
-      overflow-x: auto;
-    }
-
-    .table-container h2 {
-      color: var(--primary-blue);
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-    }
-
-    .table-container h2 i {
-      margin-right: 8px;
-      color: var(--accent-blue);
-    }
-
-    .dashboard-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-      font-size: 0.82rem;
-    }
-
-    /* Tabela - VERSÃO COM LINHAS EXCEL */
-.table-container {
-  background: var(--white);
-  border-radius: var(--border-radius);
-  padding: 1.2rem;
-  box-shadow: var(--shadow);
-  overflow-x: auto;
-}
-
-.table-container h2 {
-  color: var(--primary-blue);
-  font-size: 1.3rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-}
-
-.table-container h2 i {
-  margin-right: 8px;
-  color: var(--accent-blue);
-}
-
-.dashboard-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1200px;
-  font-size: 0.82rem;
-  border: 1px solid #d0d7e5; /* Borda externa da tabela */
-}
-
-.dashboard-table thead {
-  background: var(--primary-blue);
-  color: var(--white);
-}
-
-.dashboard-table th {
-  padding: 0.7rem 0.5rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  border: 1px solid #c0c8d8; /* Linhas entre cabeçalhos */
-}
-
-.dashboard-table td {
-  padding: 0.6rem 0.5rem;
-  border: 1px solid #e1e5eb; /* Linhas entre células - estilo Excel */
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
-
-.dashboard-table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
-.dashboard-table tbody tr:hover {
-  background-color: var(--light-blue);
-}
-
-.dashboard-table tbody tr:nth-child(even) {
-  background-color: #fafbfc; /* Zebrado estilo Excel */
-}
-
-.dashboard-table tbody tr:nth-child(even):hover {
-  background-color: var(--light-blue);
-}
-
-    .dashboard-table thead {
-      background: var(--primary-blue);
-      color: var(--white);
-    }
-
-    .dashboard-table th {
-      padding: 0.7rem 0.5rem;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      white-space: nowrap;
-    }
-
-    .dashboard-table td {
-      padding: 0.6rem 0.5rem;
-      border-bottom: 1px solid var(--medium-gray);
-      font-size: 0.8rem;
-      line-height: 1.4;
-    }
-
-    .dashboard-table tbody tr {
-      transition: background-color 0.2s ease;
-    }
-
-    .dashboard-table tbody tr:hover {
-      background-color: var(--light-blue);
-    }
-
-    .dashboard-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    /* Melhorias para colunas específicas */
-    .col-nome {
-      min-width: 180px;
-      max-width: 200px;
-    }
-
-    .col-telefone, .col-cpf {
-      min-width: 110px;
-    }
-
-    .col-email {
-      min-width: 180px;
-      max-width: 200px;
-    }
-
-    .col-chave-pix, .col-tipo-chave {
-      min-width: 120px;
-    }
-
-    .col-validacao, .col-nacionalidade, .col-estado-civil {
-      min-width: 100px;
-    }
-
-    /* Estilos para conteúdo específico */
-    .email-cell {
-      word-break: break-all;
-    }
-
-    .chave-pix-cell {
-      font-family: monospace;
-      font-size: 0.75rem;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .badge-pj {
-      background: #e1f5fe;
-      color: #0288d1;
-    }
-
-    .badge-pf {
-      background: #e8f5e9;
-      color: #388e3c;
-    }
-
-    .badge-brasileiro {
-      background: #fff3e0;
-      color: #ef6c00;
-    }
-
-    .badge-casado {
-      background: #fce4ec;
-      color: #c2185b;
-    }
-
-    .foto-thumb {
-      width: 40px;
-      height: 40px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid var(--medium-gray);
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
+    /* Mobile – cards instead of table */
+    @media (max-width: 900px){
+      .table-wrap{padding:12px}
+      table{display:none}
+      .cards{
+        display:grid;grid-template-columns:1fr;gap:12px
       }
-      
-      .stats {
-        grid-template-columns: 1fr;
+      .card-row{
+        background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow)
       }
-      
-      .chart-section ul {
-        grid-template-columns: 1fr;
-      }
-      
-      .banner-header h1 {
-        font-size: 1.5rem;
-      }
-      
-      .table-container {
-        padding: 0.8rem;
-      }
-    /* Responsividade */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      .stats {
-        grid-template-columns: 1fr;
-      }
-      
-      .chart-section ul {
-        grid-template-columns: 1fr;
-      }
-      
-      .banner-header h1 {
-        font-size: 1.5rem;
-      }
-    }
-
-    /* Badges para modal */
-    .modal-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .modal-moto {
-      background: #e1f5fe;
-      color: #0288d1;
-    }
-
-    .modal-bicicleta {
-      background: #e8f5e9;
-      color: #388e3c;
+      .card-row header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.9rem;color:var(--muted)}
+      .meta div{background:#f8fbff;border:1px solid var(--line);border-radius:8px;padding:8px}
+      .meta b{display:block;color:var(--text);margin-bottom:3px}
     }
   </style>
 </head>
 <body>
-  <header class="banner-header">
-    <h1><i class="fas fa-tachometer-alt"></i> Dashboard - Entregô Tag Norte</h1>
+  <header class="banner">
+    <h1><i class="fas fa-gauge-high"></i> Dashboard — Entregô Tag Norte</h1>
   </header>
 
   <main class="container">
-    <!-- Cards de Análises -->
-    <div class="stats">
-      <div class="stat-card">
-        <h2>{{ total_entregadores }}</h2>
-        <p>Entregadores cadastrados</p>
+    <!-- Toolbar -->
+    <div class="toolbar" role="region" aria-label="Ferramentas">
+      <div class="control" title="Buscar por Nome, Cidade, CPF, Email">
+        <i class="fas fa-magnifying-glass"></i>
+        <input id="search" type="search" placeholder="Buscar (nome, cidade, CPF, e-mail…)" aria-label="Buscar"/>
       </div>
-      <div class="stat-card">
-        <h2>{{ total_cidades }}</h2>
-        <p>Cidades distintas</p>
+
+      <div class="control" title="Filtrar por Modal">
+        <i class="fas fa-filter"></i>
+        <select id="modalFilter" aria-label="Filtrar por Modal">
+          <option value="">Todos os modais</option>
+          <option value="Moto">Moto</option>
+          <option value="Bicicleta">Bicicleta</option>
+        </select>
       </div>
-      <div class="stat-card">
-        <h2>{{ total_modal_moto }}</h2>
-        <p>Entregadores de Moto</p>
-      </div>
-      <div class="stat-card">
-        <h2>{{ total_modal_bicicleta }}</h2>
-        <p>Entregadores de Bicicleta</p>
-      </div>
+
+      <button id="exportCsv" class="btn">
+        <i class="fas fa-file-arrow-down"></i> Exportar CSV
+      </button>
+
+      <button id="clearFilters" class="btn">
+        <i class="fas fa-eraser"></i> Limpar filtros
+      </button>
     </div>
 
-    <!-- Análises em Grid -->
-    <div class="analytics-grid">
-      <!-- Análises por Nacionalidade -->
-      <div class="chart-section">
-        <h2><i class="fas fa-globe-americas"></i> Análise de Nacionalidade</h2>
-        <ul>
-          {% for nacionalidade, count in nacionalidades_count.items() %}
-            <li>{{ nacionalidade }} <span>{{ count }} entregador(es)</span></li>
-          {% endfor %}
-        </ul>
+    <!-- Stats -->
+    <section class="stats" aria-label="Resumo">
+      <div class="card">
+        <div class="stat-value" data-counter="{{ total_entregadores }}">{{ total_entregadores }}</div>
+        <div class="stat-label">Entregadores cadastrados</div>
       </div>
+      <div class="card">
+        <div class="stat-value" data-counter="{{ total_cidades }}">{{ total_cidades }}</div>
+        <div class="stat-label">Cidades distintas</div>
+      </div>
+      <div class="card">
+        <div class="stat-value" data-counter="{{ total_modal_moto }}">{{ total_modal_moto }}</div>
+        <div class="stat-label">Entregadores de Moto</div>
+      </div>
+      <div class="card">
+        <div class="stat-value" data-counter="{{ total_modal_bicicleta }}">{{ total_modal_bicicleta }}</div>
+        <div class="stat-label">Entregadores de Bicicleta</div>
+      </div>
+    </section>
 
-      <!-- Análises de Tipos de Chave PIX -->
-        <div class="chart-section">
-        <h2><i class="fas fa-key"></i> Tipos de Chave PIX</h2>
-        <ul>
-            {% for tipo_chave, count in tipos_chave_pix_count.items() %}
-            <li>{{ tipo_chave }} <span>{{ count }} entregador(es)</span></li>
-            {% endfor %}
-        </ul>
-        </div>
-
-      <!-- Análises por Cidade -->
-        <div class="chart-section">
-        <h2><i class="fas fa-city"></i> Análise por Cidade</h2>
-        <ul>
-            {% for cidade, count in cidades_count.items() %}
-            <li>{{ cidade }} <span>{{ count }} entregador(es)</span></li>
-            {% endfor %}
-        </ul>
-        </div>
-
-      <!-- Análises por Modal -->
-        <div class="chart-section">
-        <h2><i class="fas fa-motorcycle"></i> Análise de Modal</h2>
-        <ul>
-            {% for modal, count in modais_count.items() %}
-            <li>{{ modal }} <span>{{ count }} entregador(es)</span></li>
-            {% endfor %}
-        </ul>
-        </div>
-
-
-    </div>
-
-    <!-- Análises por Estado Civil -->
-    <div class="chart-section">
-      <h2><i class="fas fa-heart"></i> Análise de Estado Civil</h2>
-      <ul>
-        {% for estado_civil, count in estado_civil_count.items() %}
-          <li>{{ estado_civil }} <span>{{ count }} entregador(es)</span></li>
+    <!-- Lists -->
+    <section class="section">
+      <h2><i class="fas fa-globe-americas"></i> Análise de Nacionalidade</h2>
+      <ul class="kv-list">
+        {% for nacionalidade, count in nacionalidades_count.items() %}
+        <li class="kv-item">
+          {{ nacionalidade }} <span>{{ count }}</span>
+        </li>
         {% endfor %}
       </ul>
-    </div>
+    </section>
 
-    <!-- Tabela de Entregadores -->
-    <div class="table-container">
-    <h2><i class="fas fa-list"></i> Lista de Entregadores</h2>
-    <table class="dashboard-table">
+    <section class="section">
+      <h2><i class="fas fa-key"></i> Tipos de Chave PIX</h2>
+      <ul class="kv-list">
+        {% for tipo_chave, count in tipos_chave_pix_count.items() %}
+        <li class="kv-item">
+          {{ tipo_chave }} <span>{{ count }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-city"></i> Análise por Cidade</h2>
+      <ul class="kv-list">
+        {% for cidade, count in cidades_count.items() %}
+        <li class="kv-item">
+          {{ cidade }} <span>{{ count }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2><i class="fas fa-heart"></i> Análise de Estado Civil</h2>
+      <ul class="kv-list">
+        {% for estado_civil, count in estado_civil_count.items() %}
+        <li class="kv-item">
+          {{ estado_civil }} <span>{{ count }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <!-- Table / Cards -->
+    <section class="table-wrap" aria-label="Lista de Entregadores">
+      <h2><i class="fas fa-list"></i> Lista de Entregadores</h2>
+
+      <table id="grid">
         <thead>
-        <tr>
-            <th>Nome Completo</th>
-            <th>Telefone WhatsApp</th>
-            <th>Email</th>
-            <th>Tipo de Chave PIX</th>
-            <th>Chave Pix</th>
-            <th>Validação de Chave PIX</th>
-            <th>Nacionalidade</th>
-            <th>Estado Civil</th>
-            <th>CPF</th>
-            <th>RG</th>
-            <th>Data de Nascimento</th>
-            <th>CNPJ</th>
-            <th>Cidade</th>
-            <th>Modal</th>
-            <th>Foto</th>
-        </tr>
+          <tr>
+            <th data-col="nome">Nome Completo</th>
+            <th data-col="telefone">Telefone WhatsApp</th>
+            <th data-col="email">Email</th>
+            <th data-col="tipo_chave_pix">Tipo de Chave PIX</th>
+            <th data-col="chave_pix">Chave PIX</th>
+            <th data-col="validacao_chave_pix">Validação</th>
+            <th data-col="nacionalidade">Nacionalidade</th>
+            <th data-col="estado_civil">Estado Civil</th>
+            <th data-col="cpf">CPF</th>
+            <th data-col="rg">RG</th>
+            <th data-col="data_nascimento">Nascimento</th>
+            <th data-col="cnpj">CNPJ</th>
+            <th data-col="cidade">Cidade</th>
+            <th data-col="modal">Modal</th>
+            <th data-col="foto">Foto</th>
+          </tr>
         </thead>
         <tbody>
-        {% for e in entregadores %}
-        <tr>
+          {% for e in entregadores %}
+          <tr data-modal="{{ e.modal }}">
             <td>{{ e.nome }}</td>
             <td>{{ e.telefone }}</td>
-            <td>{{ e.email }}</td>
+            <td class="email">{{ e.email }}</td>
             <td>{{ e.tipo_chave_pix }}</td>
-            <td>{{ e.chave_pix }}</td>
+            <td class="mono">{{ e.chave_pix }}</td>
             <td>{{ e.validacao_chave_pix }}</td>
             <td>{{ e.nacionalidade }}</td>
             <td>{{ e.estado_civil }}</td>
-            <td>{{ e.cpf }}</td>
-            <td>{{ e.rg }}</td>
+            <td class="mono">{{ e.cpf }}</td>
+            <td class="mono">{{ e.rg }}</td>
             <td>{{ e.data_nascimento }}</td>
             <td>{{ e.cnpj if e.cnpj else "Não informado" }}</td>
             <td>{{ e.cidade }}</td>
             <td>
-            {% if e.modal == 'Moto' %}
-                <span class="modal-badge modal-moto">{{ e.modal }}</span>
-            {% else %}
-                <span class="modal-badge modal-bicicleta">{{ e.modal }}</span>
-            {% endif %}
+              {% if e.modal and e.modal.lower() == 'moto' %}
+                <span class="badge moto">Moto</span>
+              {% else %}
+                <span class="badge bike">{{ e.modal }}</span>
+              {% endif %}
             </td>
             <td>
-            {% if e.foto_rosto %}
-                <img src="{{ url_for('uploaded_file', filename=e.foto_rosto) }}" alt="Foto" class="foto-thumb">
-            {% else %}
-                <span style="color: var(--dark-gray);">Sem foto</span>
-            {% endif %}
+              {% if e.foto_rosto %}
+                <img src="{{ url_for('uploaded_file', filename=e.foto_rosto) }}" alt="Foto de {{ e.nome }}" class="thumb">
+              {% else %}
+                <span style="color:var(--muted)">Sem foto</span>
+              {% endif %}
             </td>
-        </tr>
-        {% endfor %}
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
-    </div>
+      </table>
 
+      <!-- Mobile cards -->
+      <div class="cards" id="cards" aria-hidden="true">
+        {% for e in entregadores %}
+        <div class="card-row" data-modal="{{ e.modal }}">
+          <header>
+            <strong>{{ e.nome }}</strong>
+            {% if e.modal and e.modal.lower() == 'moto' %}
+              <span class="badge moto">Moto</span>
+            {% else %}
+              <span class="badge bike">{{ e.modal }}</span>
+            {% endif %}
+          </header>
+          <div class="meta">
+            <div><b>Telefone</b> {{ e.telefone }}</div>
+            <div><b>Email</b> {{ e.email }}</div>
+            <div><b>CPF</b> {{ e.cpf }}</div>
+            <div><b>RG</b> {{ e.rg }}</div>
+            <div><b>Nascimento</b> {{ e.data_nascimento }}</div>
+            <div><b>Cidade</b> {{ e.cidade }}</div>
+            <div><b>Pix</b> <span style="font-family:ui-monospace">{{ e.chave_pix }}</span></div>
+            <div><b>Nacionalidade</b> {{ e.nacionalidade }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
   </main>
 
   <script>
-    // Adiciona animação de contagem nos cards de estatísticas
-    document.addEventListener('DOMContentLoaded', function() {
-      const statCards = document.querySelectorAll('.stat-card h2');
-      
-      statCards.forEach(card => {
-        const target = parseInt(card.textContent);
-        let current = 0;
-        const increment = target / 50;
-        const timer = setInterval(() => {
-          current += increment;
-          if (current >= target) {
-            current = target;
-            clearInterval(timer);
-          }
-          card.textContent = Math.floor(current);
-        }, 30);
+    // Contador animado
+    document.querySelectorAll('[data-counter]').forEach(el=>{
+      const target = parseInt(el.dataset.counter||el.textContent,10)||0;
+      let cur = 0; const step = Math.max(1, Math.ceil(target/40));
+      const t = setInterval(()=>{
+        cur += step; if(cur>=target){cur=target;clearInterval(t)}
+        el.textContent = cur;
+      },20);
+    });
+
+    // Filtro por texto + modal
+    const search = document.getElementById('search');
+    const modalFilter = document.getElementById('modalFilter');
+    const rows = Array.from(document.querySelectorAll('#grid tbody tr'));
+    const cards = Array.from(document.querySelectorAll('#cards .card-row'));
+
+    function matchRow(tr, q, modal){
+      const text = tr.innerText.toLowerCase();
+      const okText = !q || text.includes(q);
+      const okModal = !modal || (tr.dataset.modal||'').toLowerCase() === modal.toLowerCase();
+      return okText && okModal;
+    }
+    function applyFilters(){
+      const q = (search.value||'').toLowerCase().trim();
+      const m = modalFilter.value;
+      rows.forEach(tr => tr.style.display = matchRow(tr,q,m)?'':'none');
+      cards.forEach(div => {
+        const txt = div.innerText.toLowerCase();
+        const okText = !q || txt.includes(q);
+        const okModal = !m || (div.dataset.modal||'').toLowerCase() === m.toLowerCase();
+        div.style.display = (okText && okModal)?'':'none';
       });
+    }
+    search.addEventListener('input', applyFilters);
+    modalFilter.addEventListener('change', applyFilters);
+    document.getElementById('clearFilters').addEventListener('click', ()=>{
+      search.value=''; modalFilter.value=''; applyFilters();
+    });
+
+    // Ordenação por coluna (tabela)
+    const grid = document.getElementById('grid');
+    const ths = grid.querySelectorAll('thead th');
+    let sortState = { index:-1, asc:true };
+
+    ths.forEach((th, idx)=>{
+      th.addEventListener('click', ()=>{
+        const tbody = grid.tBodies[0];
+        const arr = Array.from(tbody.rows);
+        const asc = sortState.index===idx ? !sortState.asc : true;
+        arr.sort((a,b)=>{
+          const A = (a.cells[idx].innerText||'').trim().toLowerCase();
+          const B = (b.cells[idx].innerText||'').trim().toLowerCase();
+          if(!isNaN(A) && !isNaN(B)) return asc ? (A-B) : (B-A);
+          return asc ? A.localeCompare(B) : B.localeCompare(A);
+        });
+        arr.forEach(r=>tbody.appendChild(r));
+        sortState = { index:idx, asc };
+      });
+    });
+
+    // Export CSV (considera linhas filtradas visíveis)
+    function toCSV(rows){
+      const head = Array.from(grid.tHead.rows[0].cells).map(th => th.innerText.trim());
+      const body = rows.filter(r => r.style.display !== 'none').map(r =>
+        Array.from(r.cells).map(td => `"${(td.innerText||'').replace(/"/g,'""')}"`).join(',')
+      );
+      return [head.join(','), ...body].join('\n');
+    }
+    document.getElementById('exportCsv').addEventListener('click', ()=>{
+      const csv = toCSV(Array.from(grid.tBodies[0].rows));
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'entregadores.csv'; a.click();
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>
