@@ -23,5 +23,4 @@ Diretório de trabalho:
 
 Ir para o diretório
 Arquivo de configuração WSGI:/var/www/willian96w38528736_pythonanywhere_com_wsgi.py
-Versão do Python:
-3.13
+Versão do Python: 3.13

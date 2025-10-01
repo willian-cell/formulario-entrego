@@ -78,40 +78,82 @@ class Entregador(db.Model):
 # ==========================
 # Rota Principal
 # ==========================
+# Funções de validação e padronização
+def validar_cpf(cpf):
+    cpf = re.sub(r'\D', '', cpf)
+    return len(cpf) == 11
+
+def validar_cnpj(cnpj):
+    if not cnpj:
+        return True  # CNPJ é opcional
+    cnpj = re.sub(r'\D', '', cnpj)
+    return len(cnpj) == 14
+
+def padronizar_telefone(telefone):
+    return re.sub(r'\D', '', telefone)
+
+def padronizar_nome(nome):
+    return nome.strip().title()
+
+def padronizar_email(email):
+    return email.strip().lower()
+
+# Rota de cadastro
 @app.route("/", methods=["GET", "POST"])
 def cadastro():
     if request.method == "POST":
+        # Foto
         foto = request.files.get("foto")
         filename = None
-
         if foto and foto.filename != "":
+            if foto.content_length > 5 * 1024 * 1024:  # Limite 5MB
+                flash("A foto não pode ultrapassar 5MB.", "error")
+                return redirect(url_for("cadastro"))
             filename = secure_filename(foto.filename)
             foto.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
 
+        # Campos do formulário
+        nome = padronizar_nome(request.form["nome"])
+        telefone = padronizar_telefone(request.form["telefone"])
+        email = padronizar_email(request.form["email"])
+        cpf = request.form["cpf"]
+        cnpj = request.form["cnpj"]
+
+        # Validações
+        if not validar_cpf(cpf):
+            flash("CPF inválido! Digite no formato correto.", "error")
+            return redirect(url_for("cadastro"))
+
+        if not validar_cnpj(cnpj):
+            flash("CNPJ inválido! Digite no formato correto.", "error")
+            return redirect(url_for("cadastro"))
+
+        # Cria o objeto Entregador
         novo = Entregador(
-            nome=request.form["nome"],
-            telefone=request.form["telefone"],
-            email=request.form["email"],
+            nome=nome,
+            telefone=telefone,
+            email=email,
             tipo_chave_pix=request.form["tipo_chave_pix"],
             chave_pix=request.form["chave_pix"],
             validacao_chave_pix=request.form["validacao_chave_pix"],
-            nacionalidade=request.form["nacionalidade"],  # recebe do select
+            nacionalidade=request.form["nacionalidade"],
             estado_civil=request.form["estado_civil"],
-            cpf=request.form["cpf"],
+            cpf=cpf,
             rg=request.form["rg"],
             data_nascimento=request.form["data_nascimento"],
-            cnpj=request.form["cnpj"],
+            cnpj=cnpj,
             cidade=request.form["cidade"],
             modal=request.form["modal"],
             foto_rosto=filename
         )
+
+        # Salva no banco
         db.session.add(novo)
         db.session.commit()
         flash("Cadastro realizado com sucesso!", "success")
         return redirect(url_for("cadastro"))
 
     return render_template("formulario.html", nacionalidades=NACIONALIDADES)
-
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
