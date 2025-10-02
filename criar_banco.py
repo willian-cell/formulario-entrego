@@ -21,14 +21,19 @@ CREATE TABLE IF NOT EXISTS entregadores (
     cnpj TEXT,
     cidade TEXT NOT NULL,
     modal TEXT NOT NULL,
-    foto_rosto TEXT
+    foto_rosto TEXT,
+    cnh TEXT
 );
 """
 
-def criar_banco():
+def criar_banco(drop_existing=False):
     # Conectar ao banco (cria o arquivo se não existir)
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
+
+    if drop_existing:
+        cursor.execute("DROP TABLE IF EXISTS entregadores;")
+        print("⚠️ Tabela 'entregadores' antiga removida.")
 
     # Criar tabela
     cursor.execute(CREATE_TABLE_SQL)
@@ -37,4 +42,5 @@ def criar_banco():
     print(f"✅ Banco de dados '{DB_NAME}' criado com sucesso com a tabela 'entregadores'.")
 
 if __name__ == "__main__":
-    criar_banco()
+    # Passe drop_existing=True se quiser apagar a tabela antiga antes de criar
+    criar_banco(drop_existing=True)

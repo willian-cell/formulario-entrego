@@ -106,7 +106,7 @@
         </div>
 
         <div class="form-section">
-          <h3 class="section-title">Documento de Identificação</h3>
+          <h3 class="section-title">Foto de Rosto</h3>
           <div class="file-upload-container">
             <label class="file-upload-label">
               <span>Foto de rosto *</span>
@@ -117,7 +117,22 @@
               </div>
             </label>
           </div>
-        </div> # acrescentar documento de cnh ao banco de dados e ao formulario
+        </div>
+
+        <div class="form-section">
+          <h3 class="section-title">Documento de CNH</h3>
+          <div class="file-upload-container">
+            <label class="file-upload-label">
+              <span>CNH *</span>
+              <input type="file" name="cnh" accept="image/*,application/pdf" required class="file-input">
+              <div class="file-upload-area">
+                <span class="file-upload-text">Clique para selecionar ou arraste sua CNH</span>
+                <span class="file-upload-hint">Formatos: JPG, PNG, PDF (Máx. 5MB)</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
