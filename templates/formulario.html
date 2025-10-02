@@ -47,11 +47,7 @@
           <div class="input-group">
             <select name="tipo_chave_pix" required class="form-select">
               <option value="">Tipo de chave PIX *</option>
-              <option value="CPF">CPF</option>
               <option value="CNPJ">CNPJ</option>
-              <option value="Email">Email</option>
-              <option value="Telefone">Telefone</option>
-              <option value="Aleatória">Aleatória</option>
             </select>
             
             <input type="text" name="chave_pix" placeholder="Chave Pix *" required class="form-input">
@@ -59,7 +55,6 @@
           
           <select name="validacao_chave_pix" required class="form-select">
             <option value="">Validação de chave PIX *</option>
-            <option value="Física">Conta Física</option>
             <option value="PJ">Conta PJ (CNPJ/MEI)</option>
           </select>
         </div>
@@ -96,9 +91,12 @@
 
         <div class="form-section">
           <h3 class="section-title">Dados de Atuação</h3>
-          <div class="input-group">
-            <input type="text" name="cidade" id="cidade" placeholder="Cidade *" required class="form-input" autocomplete="off">
-              <ul id="cidade-list" class="autocomplete-list"></ul>            
+          <div class="input-group" style="position: relative;">
+            <select name="cidade" id="cidade" required class="form-select">
+              <option value="">Selecione a cidade *</option>
+              <option value="Brasília">Brasília</option>
+              <option value="São Paulo">São Paulo</option>
+            </select>     
             <select name="modal" required class="form-select">
               <option value="">Modal *</option>
               <option>Moto</option>
@@ -119,7 +117,7 @@
               </div>
             </label>
           </div>
-        </div>
+        </div> # acrescentar documento de cnh ao banco de dados e ao formulario
 
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">
@@ -197,41 +195,28 @@ telefoneInput.addEventListener("input", (e) => {
 </script>
 
 <script>
-  const inputCidade = document.getElementById("cidade");
-  const listaCidade = document.getElementById("cidade-list");
+const inputCidade = document.getElementById("cidade");
+const listaCidade = document.getElementById("cidade-list");
 
-  // Define Brasília como padrão
-  inputCidade.value = "Brasília";
+// Lista inicial de sugestões
+const sugestoes = ["Brasília", "São Paulo"];
 
-  inputCidade.addEventListener("input", async () => {
-    const query = inputCidade.value.trim();
-    listaCidade.innerHTML = "";
+// Define a primeira sugestão como valor padrão
+inputCidade.value = sugestoes[1];
 
-    if (query.length < 2) return; // Começa a buscar a partir de 2 caracteres
-
-    try {
-      const res = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/municipios");
-      const cidades = await res.json();
-
-      // Filtra cidades que começam com o texto digitado
-      const filtradas = cidades
-        .filter(c => c.nome.toLowerCase().startsWith(query.toLowerCase()))
-        .slice(0, 10); // Limita a 10 sugestões
-
-      filtradas.forEach(c => {
-        const li = document.createElement("li");
-        li.textContent = c.nome;
-        li.addEventListener("click", () => {
-          inputCidade.value = c.nome;
-          listaCidade.innerHTML = "";
-        });
-        listaCidade.appendChild(li);
-      });
-
-    } catch (error) {
-      console.error("Erro ao buscar cidades:", error);
-    }
+// Função para exibir sugestões iniciais
+function mostrarSugestoesIniciais() {
+  listaCidade.innerHTML = "";
+  sugestoes.forEach(c => {
+    const li = document.createElement("li");
+    li.textContent = c;
+    li.addEventListener("click", () => {
+      inputCidade.value = c;
+      listaCidade.innerHTML = "";
+    });
+    listaCidade.appendChild(li);
   });
+}
 </script>
 
 </html>
